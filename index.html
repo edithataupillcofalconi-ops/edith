@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABARROTES EL MEJOR - Profesional</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+body{margin:0;font-family:Segoe UI,sans-serif;background:linear-gradient(135deg,#ffeaa7,#74b9ff)}
+.sidebar{position:fixed;left:0;top:0;width:250px;height:100%;background:linear-gradient(#6c5ce7,#00cec9);padding:15px;color:#fff}
+.sidebar a{display:block;color:#fff;text-decoration:none;padding:10px;margin:6px 0;background:rgba(255,255,255,.2);border-radius:8px}
+.main{margin-left:270px;padding:20px}
+.section{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.card{background:#f8f9ff;border-left:8px solid #ff7675;padding:15px;border-radius:10px}
+input,button{padding:10px;margin:5px}
+button{background:#0984e3;color:white;border:none;border-radius:6px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ddd;padding:8px}
+th{background:#6c5ce7;color:white}
+</style>
+</head>
+<body>
+<div class="sidebar">
+<h2>🏪 ABARROTES EL MEJOR</h2>
+<a href="#dashboard">Dashboard</a>
+<a href="#productos">Productos</a>
+<a href="#clientes">Clientes</a>
+<a href="#ventas">Ventas</a>
+<a href="#ia">IA</a>
+</div>
+
+<div class="main">
+<div class="section" id="dashboard">
+<h1>Dashboard Profesional</h1>
+<div class="cards">
+<div class="card"><h3>Ventas</h3><p>S/ 8,750</p></div>
+<div class="card"><h3>Clientes</h3><p>120</p></div>
+<div class="card"><h3>Productos</h3><p>342</p></div>
+<div class="card"><h3>Predicción IA</h3><p>S/ 18,500</p></div>
+</div>
+</div>
+
+<div class="section" id="productos">
+<h2>Productos</h2>
+<input id="codigo" placeholder="Código">
+<input id="nombrep" placeholder="Producto">
+<input id="precio" placeholder="Precio">
+<input id="stock" placeholder="Stock">
+<button onclick="agregarProducto()">Registrar</button>
+<button onclick="exportarExcel()">Exportar Excel</button>
+<table id="tablaProductos">
+<tr><th>Código</th><th>Producto</th><th>Precio</th><th>Stock</th></tr>
+</table>
+</div>
+
+<div class="section" id="clientes">
+<h2>Clientes</h2>
+<input id="dni" placeholder="DNI">
+<input id="cliente" placeholder="Nombre">
+<button onclick="agregarCliente()">Registrar</button>
+<table id="tablaClientes">
+<tr><th>DNI</th><th>Nombre</th></tr>
+</table>
+</div>
+
+<div class="section" id="ventas">
+<h2>Ventas y Factura PDF</h2>
+<input id="vcliente" placeholder="Cliente">
+<input id="vproducto" placeholder="Producto">
+<input id="vtotal" placeholder="Total">
+<button onclick="registrarVenta()">Registrar Venta</button>
+<button onclick="generarPDF()">Factura PDF</button>
+<table id="tablaVentas">
+<tr><th>Cliente</th><th>Producto</th><th>Total</th></tr>
+</table>
+</div>
+
+<div class="section" id="ia">
+<h2>🤖 Inteligencia Artificial</h2>
+<ul>
+<li>⚠ Bajo stock detectado en Arroz.</li>
+<li>📈 Predicción de ventas próximo mes: S/ 18,500.</li>
+<li>💡 Recomendar promoción de lácteos.</li>
+<li>🏆 Producto más vendido: Aceite.</li>
+</ul>
+</div>
+</div>
+
+<script>
+function agregarProducto(){
+let t=document.getElementById('tablaProductos');
+let r=t.insertRow();
+r.insertCell(0).innerText=codigo.value;
+r.insertCell(1).innerText=nombrep.value;
+r.insertCell(2).innerText=precio.value;
+r.insertCell(3).innerText=stock.value;
+localStorage.setItem('productos',t.innerHTML);
+}
+function agregarCliente(){
+let t=document.getElementById('tablaClientes');
+let r=t.insertRow();
+r.insertCell(0).innerText=dni.value;
+r.insertCell(1).innerText=cliente.value;
+}
+function registrarVenta(){
+let t=document.getElementById('tablaVentas');
+let r=t.insertRow();
+r.insertCell(0).innerText=vcliente.value;
+r.insertCell(1).innerText=vproducto.value;
+r.insertCell(2).innerText=vtotal.value;
+}
+function exportarExcel(){
+let wb=XLSX.utils.table_to_book(document.getElementById('tablaProductos'),{sheet:'Productos'});
+XLSX.writeFile(wb,'Productos_Abarrotes_El_Mejor.xlsx');
+}
+async function generarPDF(){
+const {jsPDF}=window.jspdf;
+let doc=new jsPDF();
+doc.text('ABARROTES EL MEJOR',20,20);
+doc.text('Factura de Venta',20,35);
+doc.text('Cliente: '+document.getElementById('vcliente').value,20,50);
+doc.text('Producto: '+document.getElementById('vproducto').value,20,60);
+doc.text('Total: S/ '+document.getElementById('vtotal').value,20,70);
+doc.save('Factura.pdf');
+}
+</script>
+</body>
+</html>
